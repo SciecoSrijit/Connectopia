@@ -13,11 +13,11 @@ def bfs(graph, start, goal):
         node = path[-1]
 
         if node not in visited:
-            print(node, end=" ")  # Print the current node
+            print(f"Visiting node: {node}")  # Print the current node
             visited.add(node)
 
             if node == goal:
-                return f"\nGoal node {goal} found."
+                return f"Goal reached: {node}\nPath: {' -> '.join(path)}"
 
             neighbors = graph[node]
 
@@ -31,20 +31,26 @@ def bfs(graph, start, goal):
 
 def dfs(graph, start, goal):
     visited = set()
-    stack = [start]
+    stack = [[start]]
 
     while stack:
-        node = stack.pop()
+        path = stack.pop()
+        node = path[-1]
+
         if node not in visited:
-            print(node, end=" ")  # Print the current node
+            print(f"Visiting node: {node}")  # Print the current node
             visited.add(node)
 
             if node == goal:
-                return f"\nGoal node {goal} found."
+                return f"Goal reached: {node}\nPath: {' -> '.join(path)}"
 
             neighbors = graph[node]
-            # Push unvisited neighbors onto the stack
-            stack.extend(neighbors[::-1])
+            # Push unvisited neighbors onto the stack starting from the leftmost child
+            for neighbor in reversed(neighbors):
+                if neighbor not in visited:
+                    new_path = list(path)
+                    new_path.append(neighbor)
+                    stack.append(new_path)
 
     return "Goal node not reachable from the start node."
 
@@ -81,9 +87,9 @@ start_node = input("\nEnter the start node: ")
 target_node = input("Enter the target node: ")
 
 # Test BFS
-print("\nBFS:")
+print("\nBreadth-First Search Sequence:")
 print(bfs(graph, start_node, target_node))
 
 # Test DFS
-print("\nDFS:")
+print("\nDepth-First Search Sequence:")
 print(dfs(graph, start_node, target_node))
